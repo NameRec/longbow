@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul>
+        {% for test in object_list %}
+            <li>{{test.description}}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as django_auth_views
+
+from longbow import views as longbow_views
+from auth import views as auth_views
 
 urlpatterns = [
+    path('', longbow_views.IndexView.as_view(), name='index'),
+    path('login/', django_auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', django_auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('signup/', auth_views.signup, name='signup'),
     path('admin/', admin.site.urls),
 ]
