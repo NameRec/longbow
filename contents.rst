@@ -127,33 +127,37 @@ Longbow: сервис тестирования знаний
 Конкретные рекомендации
 -----------------------
 
-*   `django-ordered-model <https://github.com/bfirsh/django-ordered-model>`__.
+*   Админка
 
-    Поддержка порядка записей в моделях Django.
+    *   `django-ordered-model <https://github.com/bfirsh/django-ordered-model>`__.
 
-    Комментарий автора:
+        Поддержка порядка записей в моделях Django.
 
-        django-ordered-model allows models to be ordered and provides a simple admin interface for reordering them.
+        Комментарий автора:
 
-        Based on https://djangosnippets.org/snippets/998/ and https://djangosnippets.org/snippets/259/
+            django-ordered-model allows models to be ordered and provides a simple admin interface for reordering them.
 
-*   `Django Admin nested inline <https://stackoverflow.com/a/22113967>`__ - интересное интерфейсное решение, обеспечивающая возможность изменения записи, отображаемой в inline-списке админки.
+            Based on https://djangosnippets.org/snippets/998/ and https://djangosnippets.org/snippets/259/
 
-    Суть рекомендации в следующем:
+    *   `Django Admin nested inline <https://stackoverflow.com/a/22113967>`__ - интересное интерфейсное решение, обеспечивающая возможность изменения записи, отображаемой в inline-списке админки.
 
-        One common way around this is to link to an admin between first and second (or second and third) level by having both a ModelAdmin and an Inline for the same model:
+        Суть рекомендации в следующем:
 
-        Give Certificate a ModelAdmin with TrainingDate as an inline. Give CertificateInline an additional field "Details" which is a link to its ModelAdmin change form.
+            One common way around this is to link to an admin between first and second (or second and third) level by having both a ModelAdmin and an Inline for the same model:
 
-    Интересен также `другой ответ <https://stackoverflow.com/a/22113967>`__, не требующий, вроде как, внесения изменений в модель.
+            Give Certificate a ModelAdmin with TrainingDate as an inline. Give CertificateInline an additional field "Details" which is a link to its ModelAdmin change form.
 
-*   `django-inline-actions <https://github.com/escaped/django-inline-actions>`__.
+        Интересен также `другой ответ <https://stackoverflow.com/a/22113967>`__, не требующий, вроде как, внесения изменений в модель.
 
-        django-inline-actions adds actions to the InlineModelAdmin and ModelAdmin changelist.
+    *   `django-inline-actions <https://github.com/escaped/django-inline-actions>`__.
 
-    Вроде бы, закрывает тему редактирования элемента inline-списка, обеспечивая возможность расположения ссылок (в виде кнопок) для выполнения действий над элементом списка.
+            django-inline-actions adds actions to the InlineModelAdmin and ModelAdmin changelist.
 
-    Беда только, что не работает с Django 2.1.
+        Вроде бы, закрывает тему редактирования элемента inline-списка, обеспечивая возможность расположения ссылок (в виде кнопок) для выполнения действий над элементом списка.
+
+        Беда только, что не работает с Django 2.1.
+
+    *   **Использованное решение:** `django-admin-sortable2 <https://github.com/jrief/django-admin-sortable2>`__ - немного топорно, но работает.
 
 *   `django - comparing old and new field value before saving <https://stackoverflow.com/a/23363123>`__.
 
@@ -163,10 +167,20 @@ Longbow: сервис тестирования знаний
 
     Перехват операций изменения данных из админки Django. Техника логична, и достаточно проста: нужно перекрывать действия ``save_model`` и ``delete_model`` у потомка ``admin.ModelAdmin``.
 
-*   `Django: регистрация и аутентификация пользователей <https://ustimov.org/posts/17/>`__.
+*   Регистрация и аутентификация пользователей
 
-    Описан процесс регистрации нового пользователя через встроенные в Django возможности.
+    *   `Django: регистрация и аутентификация пользователей <https://ustimov.org/posts/17/>`__.
 
-*   `How to Create User Sign Up View <https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html#sign-up-with-profile-model>`__.
+        Описан процесс регистрации нового пользователя через встроенные в Django возможности.
 
-    Подробно описан процесс регистрации нового пользователя. Репозиторий `готовых решений <https://github.com/sibtc/simple-signup>`__.
+    *   `How to Create User Sign Up View <https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html#sign-up-with-profile-model>`__.
+
+        Подробно описан процесс регистрации нового пользователя. Репозиторий `готовых решений <https://github.com/sibtc/simple-signup>`__.
+
+*   Динамическое создание форм
+
+    *   Обсуждение `"Автоматическое создание полей формы для формы в django" <http://qaru.site/questions/20406/auto-generate-form-fields-for-a-form-in-django>`__.
+
+    *   Статья `So you want a dynamic form <https://www.b-list.org/weblog/2008/nov/09/dynamic-forms/>`__.
+
+    *   Статья `Динамическое создание форм на основе данных из базы в Django <https://habr.com/post/46845/>`__.

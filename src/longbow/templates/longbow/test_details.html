@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{passing.test.description}}</h1>
+    <table>
+        <tr><th>start time</th><td>{{passing.start_time}}</td></tr>
+        <tr><th>completion time</th><td>{{passing.completion_time}}</td></tr>
+        <tr><th>count questions</th><td>{{passing.stat_count_questions}}</td></tr>
+        <tr><th>correct answers</th><td>{{passing.stat_correct_answers}}</td></tr>
+    </table>
+{% endblock %}

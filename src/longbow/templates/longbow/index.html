@@ -3,7 +3,7 @@
 {% block content %}
     <ul>
         {% for test in object_list %}
-            <li>{{test.description}}</li>
+        <li><a href="{% url 'test-details' test.id %}">{{test.description}}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

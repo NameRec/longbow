@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST">{% csrf_token %}
+        <h1>Question {{question_no}}/{{questions_count}}</h1>
+        {{form.question}}<hr/>
+        <div>
+            {% for answer in answers %}
+                <input type="{{input_type}}" name="answer" id="answer_{{forloop.couter}" value="{{answer.id}}">
+                <label for="answer_{{forloop.couter}">{{answer.text}}</label>
+            {% endfor %}
+        </div>
+        <button type="submit">Next</button>
+    </form>
+{% endblock %}

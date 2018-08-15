@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Test, Question, Answer
+from .models import Test, Question, Answer, TestPassing
 
 from adminsortable2.admin import SortableInlineAdminMixin
 
@@ -16,9 +16,9 @@ class EditLinkToInlineObject(object):
 
 
 class HiddenInAdminRoot:
-    pass
-    # def get_model_perms(self, request):
-    #     return {}
+    """ Mixin to hide registered model in site admin interface """
+    def get_model_perms(self, request):
+        return {}
 
 
 class QuestionInline(EditLinkToInlineObject, SortableInlineAdminMixin, admin.TabularInline):
@@ -46,3 +46,4 @@ class TestAdmin(admin.ModelAdmin):
 admin.site.register(Test, TestAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(TestPassing)
