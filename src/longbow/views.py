@@ -1,5 +1,5 @@
 from django import forms
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
@@ -39,28 +39,6 @@ def test_details(request, test_id: int):
 @login_required
 def test_passing(request, passing_id: int):
 
-    def get_passing_state():
-        # At first check for TestPassing exists, and linked to current user.
-        try:
-            passing = TestPassing.objects.get(pk=passing_id)
-        except TestPassing.DoesNotExist:
-            raise Http404()
-        if passing.user.id != request.user.id:
-            raise Http404()
-
-        # Next, if test completed - redirect to statistics page
-        if passing.completion_time is not None:
-            return redirect('test-details', test_id=passing.test.id)
-
-        # Ok, now determine the question to be answered
-        passed_questions_qs = TestPassingQuestion.objects.filter(test_passing__exact=passing.test.id).values('question')
-        all_test_questions_qs = Question.objects.filter(test__exact=passing.test.id)
-        questions_qs = all_test_questions_qs\
-            .filter(test__exact=passing.test.id)\
-            .exclude(pk__in=passed_questions_qs)\
-            .order_by('order')
-        return all_test_questions_qs.count(), passed_questions_qs.count() + 1, questions_qs.first()
-
     def get_answers_input_type(answers):
         correct_answers = 0
         for answer in answers:
@@ -68,23 +46,70 @@ def test_passing(request, passing_id: int):
                 correct_answers += 1
             if correct_answers > 1:
                 break
-        return 'radio' if correct_answers == 1 else 'checkbox'
+        return 'radio' if correct_answers < 2 else 'checkbox'
 
-    count_questions, current_question_number, current_question = get_passing_state()
+    # At first, check for TestPassing exists, and linked to current user.
+    try:
+        passing: TestPassing = TestPassing.objects.get(pk=passing_id)
+    except TestPassing.DoesNotExist:
+        raise Http404()
+    if passing.user.id != request.user.id:
+        raise HttpResponseForbidden()
+
+    # Next, if test completed - redirect to statistics page
+    if passing.completion_time is not None:
+        return redirect('test-details', test_id=passing.test.id)
+
+    # Ok, working...
+    current_question = passing.get_questions_to_pass().order_by('order').first()
     answers = [answer for answer in current_question.answer_set.all()]
-    shuffle(answers)
-
+    input_type = get_answers_input_type(answers)
+    errors = None
     if request.method == 'POST':
-        answers = request.POST.getlist('answer')
-        return render(request, 'print.html', {'message': f'answer: {request.POST["answer"]}'})
+        user_choice = request.POST.getlist('answer')
+        if len(user_choice) == 0:
+            errors = 'You should make answer. Select one{} from offered variants.'.format(
+                '' if input_type == 'radio' else ' or more'
+            )
+
+        if errors is None:
+            # success: save user answer(s)
+            passing.save_user_choice(
+                current_question,
+                list(filter(lambda answer: str(answer.id) in user_choice, answers))
+            )
+            if passing.completion_time is not None:
+                # test is complete - redirect to statistics
+                return redirect('test-details', test_id=passing.test.id)
+            else:
+                # go to next question
+                return redirect('test-passing', passing_id=passing.id)
+
+        # there we have errors: show input form with errors
+        def restore_answers_order(answers: list, order: str):
+            # on GET request, list offered answers are shuffled (see below) - if we return form to user, we need
+            # provide answers order same as before
+            result = [None] * len(answers)
+            order_list = list(map(lambda x: int(x), order.split(',')))
+            for answer in answers:
+                result[order_list.index(answer.id)] = answer
+            return result
+
+        order = request.POST['order']
+        answers = restore_answers_order(answers, order)
     else:
-        return render(request, 'longbow/test_passing.html', {
-            'question_no': current_question_number,
-            'questions_count': count_questions,
-            'question': current_question.question_text,
-            'input_type': input_type,
-            'answers': answers,
-        })
+        shuffle(answers)
+        order = ','.join([str(answer.id) for answer in answers])
+
+    return render(request, 'longbow/test_passing.html', {
+        'question_no': passing.get_passed_questions().count() + 1,
+        'questions_count': passing.get_all_test_questions().count(),
+        'question': current_question.question_text,
+        'input_type': input_type,
+        'order': order,
+        'answers': answers,
+        'errors': errors,
+    })
 
 
 @login_required

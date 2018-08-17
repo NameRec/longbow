@@ -2,6 +2,7 @@
 
 {% block content %}
     <form method="POST">{% csrf_token %}
+        <input type="hidden" name="order" value="{{ order }}" />
         <h1>Question {{ question_no }}/{{ questions_count }}</h1>
         {{ question }}<hr/>
         <div>
@@ -10,7 +11,7 @@
             <label for="answer_{{ forloop.couter }}">{{ answer.answer_text }} ({{ answer.id }})</label></p>
             {% endfor %}
         </div>
-        {% if error_message %}<div><p><strong>{{ error_message }}</strong></p></div>{% endif %}
+        {% if errors %}<div><p style="color: red"><strong>{{ errors }}</strong></p></div>{% endif %}
         <button type="submit">Next</button>
     </form>
 {% endblock %}

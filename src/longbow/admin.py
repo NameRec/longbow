@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Test, Question, Answer, TestPassing
+from .models import Test, Question, Answer, TestPassing, TestPassingQuestion
 
 from adminsortable2.admin import SortableInlineAdminMixin
 
@@ -47,3 +47,4 @@ admin.site.register(Test, TestAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(TestPassing)
+admin.site.register(TestPassingQuestion)
