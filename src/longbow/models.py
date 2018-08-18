@@ -49,7 +49,7 @@ class TestPassing(models.Model):
         unique_together = ('test', 'user')
 
     def get_all_test_questions(self):
-        return Question.objects.filter(test__exact=self.test.id)
+        return self.test.question_set.all()
 
     def get_passed_questions(self):
         return TestPassingQuestion.objects.filter(test_passing__exact=self.id).values('question')
