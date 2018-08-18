@@ -114,7 +114,7 @@ def test_start(request, test_id: int):
         form = forms.Form(request.POST)
         if form.is_valid():
             passing = TestPassing(
-                user=User.objects.get(pk=request.user.id),
+                user=request.user,
                 test=Test.objects.get(pk=test_id),
             )
             passing.save()
