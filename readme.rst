@@ -6,6 +6,8 @@ Longbow: сервис тестирования знаний
 
 .. contents::
 
+`Репозиторий <https://github.com/NameRec/longbow>`__.
+
 Задание
 =======
 
