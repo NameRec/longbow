@@ -30,9 +30,6 @@ class Answer(models.Model):
     is_answer_correct = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
-    class Meta:
-        ordering = ('order',)
-
     def __str__(self):
         return '"{}" - {}'.format(self.answer_text, 'correct' if self.is_answer_correct else 'incorrect')
 
