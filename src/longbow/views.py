@@ -5,9 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.utils import timezone
 
-from longbow.models import Test, Question, TestPassing, TestPassingQuestion
+from longbow.models import Test, TestPassing
 from random import shuffle
 
 
@@ -117,7 +116,6 @@ def test_start(request, test_id: int):
             passing = TestPassing(
                 user=User.objects.get(pk=request.user.id),
                 test=Test.objects.get(pk=test_id),
-                start_time=timezone.now()
             )
             passing.save()
             return redirect('test-details', test_id=test_id)

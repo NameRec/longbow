@@ -40,7 +40,7 @@ class Answer(models.Model):
 class TestPassing(models.Model):
     test = models.ForeignKey(Test, related_name='+', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='+', on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
     completion_time = models.DateTimeField(null=True)
     stat_count_questions = models.PositiveIntegerField(default=0, blank=False, null=True)
     stat_correct_answers = models.PositiveIntegerField(default=0, blank=False, null=True)
@@ -58,7 +58,7 @@ class TestPassing(models.Model):
         return self.get_all_test_questions().exclude(pk__in=self.get_passed_questions())
 
     def save_user_choice(self, question: Question, answers: List[Answer]):
-        passing_question = self.testpassingquestion_set.create(question=question, answer_time=timezone.now())
+        passing_question = self.testpassingquestion_set.create(question=question)
         passing_question.save()
         for answer in answers:
             passing_question.testpassinganswer_set.create(answer=answer).save()
@@ -80,7 +80,7 @@ class TestPassing(models.Model):
 class TestPassingQuestion(models.Model):
     test_passing = models.ForeignKey(TestPassing, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, related_name='+', on_delete=models.CASCADE)
-    answer_time = models.DateTimeField()
+    answer_time = models.DateTimeField(auto_now_add=True)
 
     def is_answer_correct(self):
         # <FIXME> It's wild... For this you need SQL...
