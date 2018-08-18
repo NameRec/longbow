@@ -68,11 +68,7 @@ class TestPassing(models.Model):
             self.completion_time = timezone.now()
 
             # <FIXME> It's wild... For this you need SQL...
-            correct_answers: int = 0
-            for question in self.testpassingquestion_set.all():
-                if question.is_answer_correct():
-                    correct_answers += 1
-            self.stat_correct_answers = correct_answers
+            self.stat_correct_answers = sum(1 if question.is_answer_correct() else 0 for question in self.testpassingquestion_set.all())
             self.stat_count_questions = self.get_all_test_questions().count()
             self.save()
 
