@@ -30,21 +30,21 @@ class AnswerInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Answer
 
 
+@admin.register(Answer)
 class AnswerAdmin(HiddenInAdminRoot, admin.ModelAdmin):
     pass
 
 
+@admin.register(Question)
 class QuestionAdmin(HiddenInAdminRoot, admin.ModelAdmin):
     inlines = [AnswerInline]
 
 
+@admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
     list_display = ('description', 'pub_date')
     inlines = [QuestionInline]
 
 
-admin.site.register(Test, TestAdmin)
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Answer, AnswerAdmin)
 admin.site.register(TestPassing)
 admin.site.register(TestPassingQuestion)
