@@ -1,6 +1,6 @@
 from django import forms
-from django.http import Http404, HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.http import HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -49,10 +49,7 @@ def test_passing(request, passing_id: int):
         return 'radio' if correct_answers < 2 else 'checkbox'
 
     # At first, check for TestPassing exists, and linked to current user.
-    try:
-        passing: TestPassing = TestPassing.objects.get(pk=passing_id)
-    except TestPassing.DoesNotExist:
-        raise Http404()
+    passing: TestPassing = get_object_or_404(TestPassing, pk=passing_id)
     if passing.user.id != request.user.id:
         raise HttpResponseForbidden()
 
