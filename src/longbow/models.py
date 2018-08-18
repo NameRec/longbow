@@ -80,8 +80,8 @@ class TestPassingQuestion(models.Model):
 
     def is_answer_correct(self):
         # <FIXME> It's wild... For this you need SQL...
-        user_answers = set(map(lambda user_answer: user_answer.answer.id, self.testpassinganswer_set.all()))
-        correct_answers = set(map(lambda answer: answer.id, self.question.answer_set.filter(is_answer_correct__exact=True)))
+        user_answers = set(self.testpassinganswer_set.values_list('answer'))
+        correct_answers = set(Answer.objects.filter(question__exact=self.question.id).filter(is_answer_correct__exact=True).values_list('id'))
         return user_answers == correct_answers
 
 
